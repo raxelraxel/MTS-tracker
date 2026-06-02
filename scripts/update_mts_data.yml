@@ -1,0 +1,43 @@
+name: Update MTS Data
+
+on:
+  schedule:
+    # Runs on the 15th of every month at 08:00 UTC
+    # MTS data for the prior month typically publishes in the first week,
+    # so the 15th gives it plenty of time to be available.
+    - cron: "0 8 15 * *"
+
+  # Allows you to trigger this manually from the Actions tab in GitHub
+  workflow_dispatch:
+
+jobs:
+  update-csv:
+    runs-on: ubuntu-latest
+
+    # Required so the Action can commit the updated CSV back to the repo
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests pandas
+
+      - name: Fetch latest MTS data
+        run: python scripts/fetch_mts_data.py
+
+      - name: Commit and push updated CSV
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/mts_data.csv
+          # Only commit if there are actual changes
+          git diff --cached --quiet || git commit -m "chore: update MTS data [$(date +'%Y-%m-%d')]"
+          git push
