@@ -1,9 +1,5 @@
 name: Update MTS Data
 
-env:
-  GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-
-
 on:
   schedule:
     # Runs on the 15th of every month at 08:00 UTC
@@ -32,7 +28,8 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install requests pandas
+
       - name: Fetch latest MTS data
         run: python scripts/fetch_mts_data.py
 
@@ -43,4 +40,13 @@ jobs:
           git add data/mts_data.csv
           # Only commit if there are actual changes
           git diff --cached --quiet || git commit -m "chore: update MTS data [$(date +'%Y-%m-%d')]"
+          git push
+
+      - name: Analyze latest MTS data
+        run: python scripts/analysis.py
+
+      - name: Commit and push analysis output    # ← only needed if analysis.py saves files
+        run: |
+          git add data/        # or whatever folder analysis.py writes to
+          git diff --cached --quiet || git commit -m "chore: update analysis output [$(date +'%Y-%m-%d')]"
           git push

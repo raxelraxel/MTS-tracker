@@ -1,75 +1,75 @@
-variable,group,mts_table
-record_date,metadata,metadata
-record_fiscal_year,metadata,metadata
-record_calendar_month,metadata,metadata
-current_gross_receipts,summary,1
-current_gross_outlays,summary,1
-current_month_deficit,summary,1
-financing_borrowing,financing,2
-financing_reduce_operating_cash,financing,2
-financing_other,financing,2
-individual_income_tax,receipts,3
-corp_income_tax,receipts,3
-emp_retire_off,receipts,3
-emp_retire_on,receipts,3
-ui,receipts,3
-other_retire,receipts,3
-excise,receipts,3
-estate_gift,receipts,3
-customs,receipts,3
-misc,receipts,3
-total_receipts,receipts,3
-total_receipts_on,receipts,3
-total_receipts_off,receipts,3
-leg,outlays,3
-jud,outlays,3
-usda,outlays,3
-doc,outlays,3
-dod_mil,outlays,3
-ed,outlays,3
-doe,outlays,3
-hhs,outlays,3
-dhs,outlays,3
-hud,outlays,3
-doi,outlays,3
-doj,outlays,3
-dol,outlays,3
-state,outlays,3
-dot,outlays,3
-debt_interest_gross,outlays,3
-treasury_other,outlays,3
-va,outlays,3
-corps_engineers,outlays,3
-civil_defense,outlays,3
-epa,outlays,3
-eop,outlays,3
-gsa,outlays,3
-intl,outlays,3
-nasa,outlays,3
-nsf,outlays,3
-opm,outlays,3
-sba,outlays,3
-ssa,outlays,3
-ind_agencies,outlays,3
-undistributed_offsets_interest,outlays,3
-undistributed_offsets_other,outlays,3
-total_outlays,outlays,3
-total_outlays_on,outlays,3
-total_outlays_off,outlays,3
-deficit,outlays,3
-deficit_on,outlays,3
-deficit_off,outlays,3
-receipts_income_tax_withheld,receipts,4
-outlays_oasi,outlays_specific,5
-outlays_di,outlays_specific,5
-outlays_medicaid,outlays_specific,5
-outlays_chip,outlays_specific,5
-outlays_medicaid_chip,outlays_specific,5
-outlays_hosp_insurance_trust,outlays_specific,5
-outlays_supp_med_trust,outlays_specific,5
-outlays_fema,outlays_specific,5
-outlays_ptc,outlays_specific,5
-outlays_eitc,outlays_specific,5
-outlays_ctc,outlays_specific,5
-outlays_refundable_credits,outlays_specific,5
-outlays_snap,outlays_specific,5
+variable,group,mts_table,description
+record_date,metadata,metadata,The date the MTS data was published typically on the 8th workday of the following month.
+record_fiscal_year,metadata,metadata,The federal fiscal year in which the record falls.
+record_calendar_month,metadata,metadata,The calendar month number of the reporting period.
+current_gross_receipts,summary,1,Total monies collected by the federal government in the current month (MTS Table 1).
+current_gross_outlays,summary,1,Total monies paid out by the federal government in the current month (MTS Table 1).
+current_month_deficit,summary,1,The difference between outlays and receipts for the current month; positive value indicates a deficit (MTS Table 1).
+financing_borrowing,financing,2,Amount financed by borrowing from the public to cover the deficit (MTS Table 2).
+financing_reduce_operating_cash,financing,2,Amount financed by drawing down the Treasury's operating cash balance (MTS Table 2).
+financing_other,financing,2,Other miscellaneous financing sources used to fund the deficit (MTS Table 2).
+individual_income_tax,receipts,3,Federal individual income tax receipts reported as residual of combined tax payments minus estimated Social Security and Medicare taxes (MTS Table 3).
+corp_income_tax,receipts,3,Federal corporate income tax receipts (MTS Table 3).
+emp_retire_off,receipts,3,Off-budget employment and general retirement receipts primarily Social Security and Medicare payroll taxes (MTS Table 3 line 50).
+emp_retire_on,receipts,3,On-budget employment and general retirement receipts including federal civilian and railroad retirement contributions (MTS Table 3 line 60).
+ui,receipts,3,Unemployment insurance receipts collected by the federal government (MTS Table 3).
+other_retire,receipts,3,Receipts from other retirement and disability programs (MTS Table 3).
+excise,receipts,3,Federal excise tax receipts including taxes on fuel tobacco and alcohol (MTS Table 3).
+estate_gift,receipts,3,Federal estate and gift tax receipts (MTS Table 3).
+customs,receipts,3,Customs duties and fees collected on imports (MTS Table 3).
+misc,receipts,3,Miscellaneous federal receipts not classified elsewhere (MTS Table 3).
+total_receipts,receipts,3,Total federal receipts combining on-budget and off-budget sources (MTS Table 3).
+total_receipts_on,receipts,3,Total on-budget federal receipts (MTS Table 3).
+total_receipts_off,receipts,3,Total off-budget federal receipts primarily Social Security payroll taxes (MTS Table 3).
+leg,outlays,3,Outlays for the legislative branch of the federal government (MTS Table 3).
+jud,outlays,3,Outlays for the judicial branch of the federal government (MTS Table 3).
+usda,outlays,3,Outlays for the U.S. Department of Agriculture (MTS Table 3).
+doc,outlays,3,Outlays for the U.S. Department of Commerce (MTS Table 3).
+dod_mil,outlays,3,Outlays for the Department of Defense military programs (MTS Table 3).
+ed,outlays,3,Outlays for the U.S. Department of Education (MTS Table 3).
+doe,outlays,3,Outlays for the U.S. Department of Energy (MTS Table 3).
+hhs,outlays,3,Outlays for the U.S. Department of Health and Human Services (MTS Table 3).
+dhs,outlays,3,Outlays for the U.S. Department of Homeland Security (MTS Table 3).
+hud,outlays,3,Outlays for the U.S. Department of Housing and Urban Development (MTS Table 3).
+doi,outlays,3,Outlays for the U.S. Department of the Interior (MTS Table 3).
+doj,outlays,3,Outlays for the U.S. Department of Justice (MTS Table 3).
+dol,outlays,3,Outlays for the U.S. Department of Labor (MTS Table 3).
+state,outlays,3,Outlays for the U.S. Department of State (MTS Table 3).
+dot,outlays,3,Outlays for the U.S. Department of Transportation (MTS Table 3).
+debt_interest_gross,outlays,3,Gross interest payments on the federal public debt (MTS Table 3).
+treasury_other,outlays,3,Other outlays from the U.S. Department of the Treasury not classified elsewhere (MTS Table 3).
+va,outlays,3,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
+corps_engineers,outlays,3,Outlays for the U.S. Army Corps of Engineers (MTS Table 3).
+civil_defense,outlays,3,Outlays for civil defense programs (MTS Table 3).
+epa,outlays,3,Outlays for the U.S. Environmental Protection Agency (MTS Table 3).
+eop,outlays,3,Outlays for the Executive Office of the President (MTS Table 3).
+gsa,outlays,3,Outlays for the General Services Administration (MTS Table 3).
+intl,outlays,3,Outlays for international assistance and foreign affairs programs (MTS Table 3).
+nasa,outlays,3,Outlays for the National Aeronautics and Space Administration (MTS Table 3).
+nsf,outlays,3,Outlays for the National Science Foundation (MTS Table 3).
+opm,outlays,3,Outlays for the Office of Personnel Management primarily federal employee retirement and health benefits (MTS Table 3).
+sba,outlays,3,Outlays for the Small Business Administration (MTS Table 3).
+ssa,outlays,3,Outlays for the Social Security Administration (MTS Table 3).
+ind_agencies,outlays,3,Outlays for independent agencies not listed separately (MTS Table 3).
+undistributed_offsets_interest,outlays,3,Undistributed offsetting receipts from interest credited to federal trust funds (MTS Table 3).
+undistributed_offsets_other,outlays,3,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
+total_outlays,outlays,3,Total federal outlays combining on-budget and off-budget spending (MTS Table 3).
+total_outlays_on,outlays,3,Total on-budget federal outlays (MTS Table 3).
+total_outlays_off,outlays,3,Total off-budget federal outlays primarily Social Security benefit payments (MTS Table 3).
+deficit,outlays,3,Total federal deficit or surplus for the period combining on-budget and off-budget results (MTS Table 3).
+deficit_on,outlays,3,On-budget deficit or surplus for the period (MTS Table 3).
+deficit_off,outlays,3,Off-budget deficit or surplus for the period primarily reflecting Social Security trust fund balances (MTS Table 3).
+receipts_income_tax_withheld,receipts,4,Individual income and payroll taxes withheld from wages by employers (MTS Table 4).
+outlays_oasi,outlays_specific,5,Outlays for Old-Age and Survivors Insurance the retirement component of Social Security (MTS Table 5).
+outlays_di,outlays_specific,5,Outlays for Disability Insurance the disability component of Social Security (MTS Table 5).
+outlays_medicaid,outlays_specific,5,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
+outlays_chip,outlays_specific,5,Outlays for the Children's Health Insurance Program (MTS Table 5).
+outlays_medicaidchip,outlays_specific,5,Combined outlays for Medicaid and the Children's Health Insurance Program (MTS Table 5).
+outlays_hosp_insurance_trust,outlays_specific,5,Outlays from the Medicare Hospital Insurance Trust Fund covering Medicare Part A (MTS Table 5).
+outlays_supp_med_trust,outlays_specific,5,Outlays from the Medicare Supplementary Medical Insurance Trust Fund covering Medicare Parts B and D (MTS Table 5).
+outlays_fema,outlays_specific,5,Outlays for the Federal Emergency Management Agency disaster relief programs (MTS Table 5).
+outlays_ptc,outlays_specific,5,Outlays for the Premium Tax Credit which subsidizes health insurance purchased through ACA marketplaces (MTS Table 5).
+outlays_eitc,outlays_specific,5,Outlays for the Earned Income Tax Credit a refundable tax credit for low- and moderate-income workers (MTS Table 5).
+outlays_ctc,outlays_specific,5,Outlays for the Child Tax Credit including refundable portions paid out to eligible families (MTS Table 5).
+outlays_refundable_credits,outlays_specific,5,Total outlays for all refundable tax credits derived by summing outlays_ptc and outlays_eitc and outlays_ctc (MTS Table 5).
+outlays_snap,outlays_specific,5,Outlays for the Supplemental Nutrition Assistance Program commonly known as food stamps (MTS Table 5).
