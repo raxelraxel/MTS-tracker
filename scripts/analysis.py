@@ -1,17 +1,18 @@
 
 import pandas as pd
-from io import StringIO
 import numpy as np
 import os
 from pathlib import Path
-import groq
 from groq import Groq
 from dotenv import load_dotenv
 load_dotenv()
 import json
 import statsmodels.api as sm
 
-os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
+#os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
+BASE_DIR = Path(__file__).parent.parent  # assumes script is in scripts/
+data_path = BASE_DIR / "data/mts_data.csv"
+dict_path = BASE_DIR / "data/MTS Dictionary.csv"
 
 # ── Config ────────────────────────────────────────────────────────────────────
 data_path = Path("data/mts_data.csv")
@@ -57,12 +58,11 @@ def build_zscore_df(df_raw):
 
     return df_out
 
-
 def build_deseasonalized_df(df_raw):
     """Remove monthly seasonality from all numeric metric columns."""
     df = df_raw.reset_index()  # bring record_date back as a column
     df_out = df.copy()
-    df_out["record_type"] = "detrended"
+    df_out["record_type"] = "deseasonalized"
 
     numeric_cols = [c for c in df.select_dtypes(include="number").columns
                     if c not in EXCLUDE_COLS]
@@ -88,6 +88,47 @@ def build_deseasonalized_df(df_raw):
 
     return df_out
 
+def build_gdp_deflated_df(df_raw):
+    # Adjust all numeric metric columns to real dollars using the gdp_deflator
+    # column already embedded in the data.
+    #
+    # Formula: real_value = nominal_value * (base_deflator / row_deflator)
+    # Base: mean gdp_deflator across all rows with a valid deflator value.
+    # gdp_deflator itself is excluded from adjustment and dropped from output
+    # since it is the instrument, not a metric to be plotted.
+    df = df_raw.reset_index()
+    df_real = df.copy()
+    df_real["record_type"] = "real"
+    # Base deflator: 2026 Q1 (January, February, or March 2026)
+    # Match rows where record_date falls in Q1 2026 and extract the deflator
+    q1_2026_mask = (
+        (df["record_date"].dt.year == 2026) &
+        (df["record_date"].dt.month <= 3)
+    )
+    q1_2026_deflators = df.loc[q1_2026_mask, "gdp_deflator"].dropna()
+
+    if q1_2026_deflators.empty:
+        # Fallback: use most recent available deflator if 2026 Q1 not in data
+        valid_deflators = df["gdp_deflator"].dropna()
+        if valid_deflators.empty:
+            return df  # no deflator data at all, return raw
+        base_deflator = valid_deflators.iloc[-1]
+    else:
+        # All Q1 2026 rows should share the same deflator value -- take the first
+        base_deflator = q1_2026_deflators.iloc[0]
+
+    # Identify columns to adjust -- numeric, excluding metadata and gdp_deflator
+    exclude = ["record_date","record_fiscal_year", "record_calendar_month", "gdp_deflator","record_type"]
+    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    cols_to_adjust = [c for c in numeric_cols if c not in exclude]
+
+    # Apply row-wise deflation using vectorized operations
+    deflator_ratio = base_deflator / df["gdp_deflator"]
+    for col in cols_to_adjust:
+        df_real[col] = df[col] * deflator_ratio
+
+    return df_real
+
 
 #Build dataset
 df_raw = load_data()
@@ -98,16 +139,17 @@ df_raw.index = pd.to_datetime(df_raw.index)
 # Build derived datasets
 df_zscore = build_zscore_df(df_raw)
 df_detrended = build_deseasonalized_df(df_raw)
+df_real=build_gdp_deflated_df(df_raw)
 
 # Rebuild mts_data.csv with all three record_type levels
 df_raw_out = df_raw.reset_index()  # restore record_date as column
-combined = pd.concat([df_raw_out, df_zscore, df_detrended], ignore_index=True)
+combined = pd.concat([df_raw_out, df_zscore, df_detrended,df_real], ignore_index=True)
 combined = combined.sort_values(
     ["record_date", "record_type"]
 ).reset_index(drop=True)
 combined["record_date"] = pd.to_datetime(combined["record_date"]).dt.strftime("%Y-%m-%d")
 combined.to_csv(data_path, index=False)
-print(f"✓ mts_data.csv rewritten: {len(df_raw_out)} raw rows × 3 record types = {len(combined)} total rows.")
+print(f"✓ mts_data.csv rewritten: {len(df_raw_out)} raw rows × 4 record types = {len(combined)} total rows.")
 
 #Z-score thresholds. For now, do 2 and 3. Can allow user to adjust later.
 thresholds=[2,3]

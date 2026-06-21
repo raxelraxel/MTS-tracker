@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests pandas
+        run: pip install requests pandas statsmodels groq python-dotenv
 
       - name: Fetch latest MTS data
         run: python scripts/fetch_mts_data.py
@@ -44,7 +44,8 @@ jobs:
 
       - name: Analyze latest MTS data
         run: python scripts/analysis.py
-
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       - name: Commit and push analysis output    # ← only needed if analysis.py saves files
         run: |
           git add data/        # or whatever folder analysis.py writes to

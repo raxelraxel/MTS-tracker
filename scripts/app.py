@@ -1,16 +1,44 @@
 import streamlit as st
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from io import StringIO
-
+import json
 import pandas as pd
 from pathlib import Path
 
 @st.cache_data(ttl=3600)  # cache for 1 hour so repeated interactions are fast
 def load_mts_data() -> pd.DataFrame:
-    return pd.read_csv(Path("data/mts_data.csv"))
+    df = pd.read_csv(Path("data/mts_data.csv"))
+    df["record_date"] = pd.to_datetime(df["record_date"])
+    return df
 
+@st.cache_data
+def load_dictionary() -> pd.DataFrame:
+    return pd.read_csv(Path("data/MTS Dictionary.csv"))
+
+dict_df = load_dictionary()
 df = load_mts_data()
+
+
+@st.cache_data
+def load_groq_summaries() -> list:
+    with open(Path("data/groq_summaries.json"), "r", encoding="utf-8") as f:
+        return json.load(f)
+
+@st.cache_data
+def load_anomaly_flags() -> pd.DataFrame:
+    return pd.read_csv(Path("data/output_anomaly_flags.csv"))
+
+
+summaries = load_groq_summaries()
+anomaly_flags = load_anomaly_flags()
+
+record_type_map = {
+    "Raw": "raw",
+    "Standardized (z-score)": "zscore",
+    "Real": "real",
+    "De-seasonalized": "deseasonalized",
+}
+
 
 # ── Page config ────────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -27,16 +55,32 @@ st.caption("U.S. Treasury — Monthly Financial Data Explorer")
 # SIDEBAR — Selectors
 # ══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
+    # Build a sorted list of available dates from the JSON for anomaly detection
+    st.header("Select Date for Anomaly Detection")
+    available_dates = sorted(
+        [s["record_date"] for s in summaries],
+        reverse=True
+    )
+
+    # Format for display — strip the timestamp portion
+    date_labels = {s: pd.to_datetime(s).strftime("%B %Y") for s in available_dates}
+
+    selected_summary_date = st.selectbox(
+        "Select month:",
+        options=available_dates,
+        format_func=lambda d: date_labels[d],
+        index=0  # default to most recent
+    )
+
     st.header("Select Variables")
 
     # ── Data mode: Raw or Standardized ────────────────────────────────────────
     st.markdown("---")
     data_mode = st.radio(
         "Data:",
-        options=["Raw", "Standardized (z-score)"],
+        options=["Raw", "Standardized (z-score)","Real","De-seasonalized"],
         horizontal=True,
     )
-    df = df_raw if data_mode == "Raw" else df_std
     st.markdown("---")
 
     # ── Filter mode: Group or MTS Table ───────────────────────────────────────
@@ -70,17 +114,29 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("Variables")
 
-    # Select All toggle
-    select_all = st.checkbox("Select All", value=True)
+    # REMOVED FOR NOW: Select All toggle
+    #select_all = st.checkbox("Select All", value=True)
+
+    # ── Anomalies filter ──────────────────────────────────────────────────────────
+    show_anomalies = st.checkbox("Anomalies only", value=False)
+
+    if show_anomalies:
+        # Use the same date selected in the summary dropdown
+        anomaly_vars = anomaly_flags[
+            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
+            ]["variable"].tolist()
+        filtered_vars = [v for v in filtered_vars if v in anomaly_vars]
+        if not filtered_vars:
+            st.caption("No anomalies flagged for the current filter selection.")
 
     # If Select All is checked and there are more than 6 variables,
     # pre-select only the first 6 in data column order before rendering
-    if select_all and len(filtered_vars) > 6:
+    if len(filtered_vars) > 6:
         all_cols = [c for c in df.columns if c in filtered_vars]
         default_selected = set(all_cols[:6])
         st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
     else:
-        default_selected = set(filtered_vars) if select_all else set()
+        default_selected = set(filtered_vars)
 
     # Render one checkbox per variable — checked state reflects the 6-var limit
     selected_vars = []
@@ -94,6 +150,17 @@ with st.sidebar:
         all_cols = [c for c in df.columns if c in selected_vars]
         selected_vars = all_cols[:6]
         st.caption("⚠️ Max 6 variables. Showing first 6 checked.")
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Groq narrative summary
+# ══════════════════════════════════════════════════════════════════════════════
+st.markdown("### Analysis Summary")
+selected_summary = next(
+    (s["summary"] for s in summaries if s["record_date"] == selected_summary_date),
+    "No summary available for this date."
+)
+
+st.info(selected_summary)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DATE RANGE SLIDER
@@ -117,6 +184,7 @@ date_range = st.slider(
 # Filter the dataframe to the selected date range
 start_date, end_date = date_range
 df_filtered = df[
+    (df["record_type"] == record_type_map[data_mode]) &
     (df["record_date"].dt.date >= start_date) &
     (df["record_date"].dt.date <= end_date)
 ].copy()
@@ -127,7 +195,12 @@ df_filtered = df[
 
 # ── Chart title reflecting active mode and date range ─────────────────────────
 is_standardized = data_mode == "Standardized (z-score)"
-mode_label = "Z-Score (Standardized)" if is_standardized else "USD"
+mode_label = {
+    "Raw": "USD (Nominal)",
+    "Standardized (z-score)": "Z-Score",
+    "Real": "USD (Real)",
+    "De-seasonalized": "USD (De-seasonalized)",
+}[data_mode]
 chart_title = (
     f"MTS Data — {start_date.strftime('%b %Y')} to {end_date.strftime('%b %Y')}  "
     f"| {mode_label}"
