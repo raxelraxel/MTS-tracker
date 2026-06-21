@@ -6,10 +6,10 @@ import os
 from pathlib import Path
 import groq
 from groq import Groq
-import os
 from dotenv import load_dotenv
 load_dotenv()
 import json
+import statsmodels.api as sm
 
 os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
 
@@ -29,25 +29,6 @@ def load_data():
     df = df.sort_values("record_date").reset_index(drop=True)
     return df
 
-def load_standardized_data():
-    """Standardize all numeric columns to mean=0, sd=1.
-    record_date is preserved as-is; non-numeric columns are skipped.
-    """
-    df = load_data()
-    df = df.dropna(how='all')
-    df_std = df.copy()
-    numeric_cols = df.select_dtypes(include="number").columns.tolist()
-    # Exclude fiscal year and calendar month — not metrics
-    exclude = ["record_fiscal_year", "record_calendar_month"]
-    cols_to_standardize = [c for c in numeric_cols if c not in exclude]
-    for col in cols_to_standardize:
-        mean = df[col].mean()
-        sd = df[col].std()
-        if sd > 0:  # avoid division by zero for constant columns
-            df_std[col] = (df[col] - mean) / sd
-        else:
-            df_std[col] = 0.0
-    return df_std
 
 def load_dictionary():
     dict_df = pd.read_csv(dict_path)
@@ -55,17 +36,86 @@ def load_dictionary():
     dict_df = dict_df[dict_df["group"] != "metadata"].reset_index(drop=True)
     return dict_df
 
+EXCLUDE_COLS = [
+    "record_date", "record_type", "record_fiscal_year",
+    "record_calendar_month", "gdp_deflator"
+]
 
+def build_zscore_df(df_raw):
+    """Z-score standardize all numeric metric columns across the full raw history."""
+    df = df_raw.reset_index()  # bring record_date back as a column
+    df_out = df.copy()
+    df_out["record_type"] = "zscore"
+
+    numeric_cols = [c for c in df.select_dtypes(include="number").columns
+                    if c not in EXCLUDE_COLS]
+
+    for col in numeric_cols:
+        mean = df[col].mean()
+        sd = df[col].std()
+        df_out[col] = (df[col] - mean) / sd if sd > 0 else 0.0
+
+    return df_out
+
+
+def build_deseasonalized_df(df_raw):
+    """Remove monthly seasonality from all numeric metric columns."""
+    df = df_raw.reset_index()  # bring record_date back as a column
+    df_out = df.copy()
+    df_out["record_type"] = "detrended"
+
+    numeric_cols = [c for c in df.select_dtypes(include="number").columns
+                    if c not in EXCLUDE_COLS]
+
+    t = np.arange(len(df))
+    months = df["record_date"].dt.month
+    dummies = pd.get_dummies(months, prefix="m", drop_first=True)
+    dummies.index = df.index
+
+    for col in numeric_cols:
+        series = df[col]
+        if series.isna().all() or series.std() == 0:
+            df_out[col] = 0.0
+            continue
+        X = sm.add_constant(
+            pd.concat([pd.Series(t, name="t", index=df.index), dummies], axis=1)
+        )
+        try:
+            model = sm.OLS(series, X, missing="drop").fit()
+            df_out[col] = model.resid
+        except Exception:
+            df_out[col] = np.nan
+
+    return df_out
+
+
+#Build dataset
 df_raw = load_data()
-df_std = load_standardized_data()
+df_raw = df_raw[df_raw["record_type"] == "raw"]  # always work from raw only
+df_raw = df_raw.set_index("record_date")
+df_raw.index = pd.to_datetime(df_raw.index)
+
+# Build derived datasets
+df_zscore = build_zscore_df(df_raw)
+df_detrended = build_deseasonalized_df(df_raw)
+
+# Rebuild mts_data.csv with all three record_type levels
+df_raw_out = df_raw.reset_index()  # restore record_date as column
+combined = pd.concat([df_raw_out, df_zscore, df_detrended], ignore_index=True)
+combined = combined.sort_values(
+    ["record_date", "record_type"]
+).reset_index(drop=True)
+combined["record_date"] = pd.to_datetime(combined["record_date"]).dt.strftime("%Y-%m-%d")
+combined.to_csv(data_path, index=False)
+print(f"✓ mts_data.csv rewritten: {len(df_raw_out)} raw rows × 3 record types = {len(combined)} total rows.")
+
+#Z-score thresholds. For now, do 2 and 3. Can allow user to adjust later.
+thresholds=[2,3]
+
+###Function to check univariate anomalies
 dict_df = load_dictionary()
 
 
-df_raw = df_raw.set_index('record_date')       # promote the column to the index
-df_raw.index = pd.to_datetime(df_raw.index)
-
-
-#Z-score function
 def z_score(value, history):
     """Calculate z-score of value against historical series."""
     mean = history.mean()
@@ -74,18 +124,6 @@ def z_score(value, history):
         return 0.0
     return (value - mean) / std
 
-#Remove monthly seasonality
-def deseasonalize(series):
-    dummies = pd.get_dummies(series.index.month, prefix='m', drop_first=True)
-    t = np.arange(len(series))
-    X = sm.add_constant(pd.concat([pd.Series(t, name='t'), dummies.set_index(series.index)], axis=1))
-    model = sm.OLS(series, X).fit()
-    return model.resid
-
-#Z-score thresholds. For now, do 2 and 3. Can allow user to adjust later.
-thresholds=[2,3]
-
-###Function to check univariate anomalies
 
 def check_anomalies(df, current_date, thresholds=thresholds):
     """
@@ -101,7 +139,7 @@ def check_anomalies(df, current_date, thresholds=thresholds):
     results = {}
 
     for col in df.columns:
-        if col in ('date_set', 'record_month','record_calendar_month','record_fiscal_year'):
+        if col in ('date_set', 'record_month','record_calendar_month','record_fiscal_year','record_type'):
             continue
         series = df[col]
 
@@ -198,12 +236,17 @@ def save_groq_summary(record_date, summary_text):
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(records, f, indent=2)
 
+
+###########Run the analysis code code
+
+#Identify latest record date from the updated data.
 current_date = df_raw.index.max()
 record_date=current_date
 output=check_anomalies(df_raw, current_date, thresholds=thresholds)
 output["total_score"]=output["anomaly_same_month"]+output["anomaly_yoy_change"]+output["anomaly_mom_change"] #create total risk score
 #Add output to output data
 output_data = pd.concat([output, output_data])
+output_data = output_data.drop_duplicates(subset=["record_date", "variable"], keep="first")
 output_data.to_csv("data/output_data.csv", index=False)
 
 #Originally Just look at the 3 and 2 flagged anomalies, but now using total score of 5 or higher. 5 could be one anomaly is 3 (high), and two are 1 (low), or two are medium (2) and 1 low (1).
@@ -217,6 +260,10 @@ flags=flags.sort_values("total_score", ascending=False) #sort based on total ris
 cols=["val_current","val_same_month_avg","yoy_change_current","yoy_change_avg","mom_change_current","mom_change_avg"]
 flags[cols]=flags[cols].astype(float)
 flags[cols]= (flags[cols]/1000000).round(2)
+
+flags_data = pd.concat([flags, flags_data])
+flags_data = flags_data.drop_duplicates(subset=["record_date", "variable"], keep="first")
+flags_data.to_csv("data/output_anomaly_flags.csv", index=False)
 
 #relabel variables for Groq prompt:
 variable_labels = {
@@ -233,13 +280,7 @@ variable_labels = {
 }
 flags.rename(columns=variable_labels, inplace=True)
 
-flags_data = pd.concat([flags, flags_data])
-flags_data.to_csv("data/output_anomaly_flags.csv", index=False)
-
-
-
-#Send to Groq:
-
+#Send to Groq for narrative summary.
 groq_key = os.environ.get("GROQ_API_KEY")
 client=Groq(api_key=groq_key)
 table_str=flags.to_string(index=False)
@@ -253,7 +294,6 @@ All values are in US dollars. The table includes variables that presented an ano
 
 Anomaly risk is flagged as 3, 2, and 1, where 3 is the highest risk, 2 is medium risk, and 1 is no risk. 
 A variable could have an anomaly flagged for any of the metrics - not necessarily all of them.
-
 
 Describe the rows with anomalies, saying the risk level (3=high, 2=medium, 1=none), the current value (in millions $), and the 10-year historical average for the flagged metric. 
 Use the text from the variable "description" to describe the results. 
@@ -277,10 +317,4 @@ summary_text = response.choices[0].message.content
 print(summary_text)
 save_groq_summary(record_date, summary_text)
 
-
-
-
-
-###Add PCA steps and save analysis output to a new file called mts_output.csv, appending the row.
-##Format output in a single row
-
+###To add: PCA steps and save analysis output to a new file called mts_output.csv, appending the row.

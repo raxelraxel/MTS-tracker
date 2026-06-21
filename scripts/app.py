@@ -3,8 +3,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from io import StringIO
 
-from analysis import run_full_analysis
-
 import pandas as pd
 from pathlib import Path
 

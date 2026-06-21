@@ -254,6 +254,7 @@ def fetch_and_clean(record_date: str) -> pd.DataFrame:
     # ── Assemble row (column order matches OfficeScript newRow.push order) ─────
     row = {
         "record_date":                      rd,
+        "record_type":                      "raw",
         "record_fiscal_year":               fiscal_year,
         "record_calendar_month":            cal_month,
         "gdp_deflator":                     gdp_deflator,
