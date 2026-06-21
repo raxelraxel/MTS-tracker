@@ -9,9 +9,9 @@ from groq import Groq
 import os
 from dotenv import load_dotenv
 load_dotenv()
+import json
 
-
-os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v2.0")
+os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
 
 # ── Config ────────────────────────────────────────────────────────────────────
 data_path = Path("data/mts_data.csv")
@@ -19,6 +19,7 @@ dict_path = Path("data/MTS Dictionary.csv")
 
 #Load output file
 output_data=pd.read_csv("data/output_data.csv")
+flags_data=pd.read_csv("data/output_anomaly_flags.csv")
 
 # ── Load data ──────────────────────────────────────────────────────────────────
 def load_data():
@@ -180,15 +181,30 @@ def check_anomalies(df, current_date, thresholds=thresholds):
 
     return results_df
 
+#Function to save groq summary to a json file
+def save_groq_summary(record_date, summary_text):
+    file_path = "data/groq_summaries.json"
 
+    with open(file_path, "r", encoding="utf-8") as f:
+        records = json.load(f)
+
+    records = [r for r in records if r["record_date"] != str(record_date)]
+
+    records.append({
+        "record_date": str(record_date),
+        "summary": summary_text
+    })
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2)
 
 current_date = df_raw.index.max()
-
+record_date=current_date
 output=check_anomalies(df_raw, current_date, thresholds=thresholds)
 output["total_score"]=output["anomaly_same_month"]+output["anomaly_yoy_change"]+output["anomaly_mom_change"] #create total risk score
 #Add output to output data
 output_data = pd.concat([output, output_data])
-output_data.to_csv("output_data.csv", index=False)
+output_data.to_csv("data/output_data.csv", index=False)
 
 #Originally Just look at the 3 and 2 flagged anomalies, but now using total score of 5 or higher. 5 could be one anomaly is 3 (high), and two are 1 (low), or two are medium (2) and 1 low (1).
 
@@ -217,16 +233,16 @@ variable_labels = {
 }
 flags.rename(columns=variable_labels, inplace=True)
 
+flags_data = pd.concat([flags, flags_data])
+flags_data.to_csv("data/output_anomaly_flags.csv", index=False)
 
-flags.to_csv("test.csv", index=False)
+
 
 #Send to Groq:
 
 groq_key = os.environ.get("GROQ_API_KEY")
 client=Groq(api_key=groq_key)
 table_str=flags.to_string(index=False)
-
-
 prompt = f"""
 You will interpret the following output table in bullet point narrative form. The column labels define the variable definitions in the output table. 
 The data are results from an analysis to detect anomalies in data reported monthly by the U.S. Department of Treasury in the Monthly Treasury Statement. 
@@ -257,7 +273,11 @@ response = client.chat.completions.create(
     temperature=0.2,  # low temperature for factual/analytical output
 )
 
-print(response.choices[0].message.content)
+summary_text = response.choices[0].message.content
+print(summary_text)
+save_groq_summary(record_date, summary_text)
+
+
 
 
 
