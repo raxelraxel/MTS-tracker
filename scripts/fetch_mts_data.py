@@ -338,6 +338,7 @@ def fetch_and_clean(record_date: str) -> pd.DataFrame:
 def load_existing() -> pd.DataFrame:
     if CSV_PATH.exists():
         df = pd.read_csv(CSV_PATH)
+        df[DATE_COL] = pd.to_datetime(df[DATE_COL], format="mixed").dt.strftime("%Y-%m-%d")
         print(f"  → {len(df)} existing rows loaded from {CSV_PATH}")
         return df
     print(f"  → No existing CSV at {CSV_PATH}; will create a new one.")
@@ -402,7 +403,7 @@ def main():
         sys.exit(0)
 
     # Sort descending by date before saving
-    combined[DATE_COL] = pd.to_datetime(combined[DATE_COL])
+    combined[DATE_COL] = pd.to_datetime(combined[DATE_COL],format="mixed")
     combined = combined.sort_values(DATE_COL, ascending=False).reset_index(drop=True)
     combined[DATE_COL] = combined[DATE_COL].dt.strftime("%Y-%m-%d")
 
