@@ -164,6 +164,7 @@ selected_summary = next(
     "No summary available for this date."
 )
 
+selected_summary = selected_summary.replace("$", "\\$")
 st.info(selected_summary)
 
 # ══════════════════════════════════════════════════════════════════════════════
