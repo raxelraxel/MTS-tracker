@@ -69,7 +69,7 @@ def build_deseasonalized_df(df_raw):
 
     t = np.arange(len(df))
     months = df["record_date"].dt.month
-    dummies = pd.get_dummies(months, prefix="m", drop_first=True)
+    dummies = pd.get_dummies(months, prefix="m", drop_first=True,dtype=float)
     dummies.index = df.index
 
     for col in numeric_cols:
@@ -84,6 +84,7 @@ def build_deseasonalized_df(df_raw):
             model = sm.OLS(series, X, missing="drop").fit()
             df_out[col] = model.resid
         except Exception:
+            print(f"  WARNING: deseasonalize failed for {col}: {e}")
             df_out[col] = np.nan
 
     return df_out
