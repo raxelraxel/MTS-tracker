@@ -154,7 +154,8 @@ if show_summary:
 else:
     chart_vars = selected_vars
 
-
+st.write(f"chart_vars: {chart_vars}")
+st.write(f"chart_vars: {anomaly_vars}")
 # ══════════════════════════════════════════════════════════════════════════════
 # Groq narrative summary
 # ══════════════════════════════════════════════════════════════════════════════
@@ -213,14 +214,14 @@ chart_title = (
 st.markdown(f"### {chart_title}")
 
 if not chart_vars:
-    st.warning("No variables selected. Please select at least one variable in the sidebar.")
+    st.warning("No variables selected. Please select at least one variable.")
 
 elif df_filtered.empty:
     st.warning("No data in the selected date range.")
 
 else:
     n = len(chart_vars)
-
+    st.write(f"n_vars: {n}")
     # Build subplot grid — 2 columns, enough rows to fit all charts
     n_cols = 2
     n_rows = (n + 1) // 2   # ceiling division: e.g. 5 vars → 3 rows
