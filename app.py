@@ -13,7 +13,7 @@ def load_mts_data() -> pd.DataFrame:
 
 @st.cache_data
 def load_dictionary() -> pd.DataFrame:
-    return pd.read_csv(Path("data/MTS Dictionary.csv"))
+    return pd.read_csv(Path("data/MTS dictionary.csv"))
 
 dict_df = load_dictionary()
 df = load_mts_data()
