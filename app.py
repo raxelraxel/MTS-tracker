@@ -59,52 +59,60 @@ st.caption("U.S. Treasury — Monthly Financial Data Explorer")
 # SIDEBAR — Selectors
 # ══════════════════════════════════════════════════════════════════════════════
 with st.sidebar:
-    # Build a sorted list of available dates from the JSON for anomaly detection
-    st.header("Select Date for Anomaly Detection")
+    # ══════════════════════════════════════════════════════
+    # DATA MODE
+    # ══════════════════════════════════════════════════════
+    st.header("Data Formatting")
+    data_mode = st.radio(
+        "Format:",
+        options=["Raw", "Standardized (z-score)", "Real", "De-seasonalized"],
+        horizontal=True,
+    )
+
+    st.markdown("---")
+
+    # ══════════════════════════════════════════════════════
+    # ANOMALY DETECTION
+    # ══════════════════════════════════════════════════════
+    st.header("Anomaly Detection")
+
     available_dates = sorted(
         [s["record_date"] for s in summaries],
         reverse=True
     )
-
-    # Format for display — strip the timestamp portion
     date_labels = {s: pd.to_datetime(s).strftime("%B %Y") for s in available_dates}
 
     selected_summary_date = st.selectbox(
         "Select month:",
         options=available_dates,
         format_func=lambda d: date_labels[d],
-        index=0  # default to most recent
+        index=0
     )
 
-    st.header("Select Variables")
+    show_summary = st.toggle("View anomaly results", value=False)
 
-    # ── Data mode: Raw or Standardized ────────────────────────────────────────
-    st.markdown("---")
-    data_mode = st.radio(
-        "Data:",
-        options=["Raw", "Standardized (z-score)","Real","De-seasonalized"],
-        horizontal=True,
-    )
     st.markdown("---")
 
-    # ── Filter mode: Group or MTS Table ───────────────────────────────────────
+    # ══════════════════════════════════════════════════════
+    # VARIABLES VIEWED
+    # ══════════════════════════════════════════════════════
+    st.header("Variables Viewed")
+
+    # ── Filter mode ───────────────────────────────────────
     filter_mode = st.radio(
         "Filter by:",
         options=["Group", "MTS Table"],
         horizontal=True,
     )
 
-    # ── Group dropdown ─────────────────────────────────────────────────────────
     if filter_mode == "Group":
         groups = dict_df["group"].unique().tolist()
         selected_filter = st.selectbox(
             "Select Group",
             options=groups,
-            index=groups.index("summary"),   # default to summary
+            index=groups.index("summary"),
         )
         filtered_vars = dict_df[dict_df["group"] == selected_filter]["variable"].tolist()
-
-    # ── MTS Table dropdown ─────────────────────────────────────────────────────
     else:
         tables = sorted(dict_df["mts_table"].unique().tolist(), key=str)
         selected_filter = st.selectbox(
@@ -114,42 +122,32 @@ with st.sidebar:
         )
         filtered_vars = dict_df[dict_df["mts_table"] == selected_filter]["variable"].tolist()
 
-    # ── Variable checkboxes with Select All ───────────────────────────────────
     st.markdown("---")
+
+    # ── Variable checkboxes ───────────────────────────────
     st.subheader("Variables")
 
-    # REMOVED FOR NOW: Select All toggle
-    #select_all = st.checkbox("Select All", value=True)
-
-    # ── Anomalies filter ──────────────────────────────────────────────────────────
-    show_anomalies = st.checkbox("Anomalies only", value=False)
-
-    if show_anomalies:
-        # Use the same date selected in the summary dropdown
+    if show_summary:
         anomaly_vars = anomaly_flags[
-            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date,format="mixed")
-            ]["variable"].tolist()
-        filtered_vars = [v for v in filtered_vars if v in anomaly_vars]
+            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
+        ]["variable"].tolist()
+        filtered_vars = anomaly_vars if anomaly_vars else []
+        default_selected = set()
         if not filtered_vars:
-            st.caption("No anomalies flagged for the current filter selection.")
-
-    # If Select All is checked and there are more than 6 variables,
-    # pre-select only the first 6 in data column order before rendering
-    if len(filtered_vars) > 6:
-        all_cols = [c for c in df.columns if c in filtered_vars]
-        default_selected = set(all_cols[:6])
-        st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
+            st.caption("No anomalies flagged for the selected month.")
     else:
+        if len(filtered_vars) > 6:
+            all_cols = [c for c in df.columns if c in filtered_vars]
+            filtered_vars = all_cols[:6]
+            st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
         default_selected = set(filtered_vars)
 
-    # Render one checkbox per variable — checked state reflects the 6-var limit
     selected_vars = []
     for var in filtered_vars:
         checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{var}")
         if checked:
             selected_vars.append(var)
 
-    # Final safety cap — if user manually checks more than 6
     if len(selected_vars) > 6:
         all_cols = [c for c in df.columns if c in selected_vars]
         selected_vars = all_cols[:6]
@@ -158,14 +156,14 @@ with st.sidebar:
 # ══════════════════════════════════════════════════════════════════════════════
 # Groq narrative summary
 # ══════════════════════════════════════════════════════════════════════════════
-st.markdown("### Analysis Summary")
-selected_summary = next(
-    (s["summary"] for s in summaries if s["record_date"] == selected_summary_date),
-    "No summary available for this date."
-)
-
-selected_summary = selected_summary.replace("$", "\\$")
-st.info(selected_summary)
+if show_summary:
+    st.markdown("### Potential Anomalies for Selected Month")
+    selected_summary = next(
+        (s["summary"] for s in summaries if s["record_date"] == selected_summary_date),
+        "No summary available for this date."
+    )
+    selected_summary = selected_summary.replace("$", "\\$")
+    st.info(selected_summary)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # DATE RANGE SLIDER
