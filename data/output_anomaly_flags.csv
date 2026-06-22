@@ -7,6 +7,14 @@ record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current
 2026-05-31 00:00:00,110072.0,81764.3,2,-30928.0,-23670.7,2,-30928.0,560.22,1,total_receipts_off,5,Total off-budget federal receipts primarily Social Security payroll taxes (MTS Table 3).
 2026-05-31 00:00:00,22625.79,13803.09,2,5660.61,-219.77,2,5660.61,49.99,1,usda,5,Outlays for the U.S. Department of Agriculture (MTS Table 3).
 2026-05-31 00:00:00,132622.55,55391.59,2,20622.55,-2383.78,2,20622.55,717.9,1,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
+2026-05-31 00:00:00,-42.3,6488.24,1,-22166.44,163.56,3,-22166.44,159.1,3,customs,7,Customs duties and fees collected on imports (MTS Table 3).
+2026-05-31 00:00:00,960.42,707.47,2,324.49,23.94,2,324.49,-0.07,2,jud,6,Outlays for the judicial branch of the federal government (MTS Table 3).
+2026-05-31 00:00:00,-18922.02,-5888.62,2,-5992.68,2197.43,3,-5992.68,-100.05,1,undistributed_offsets_interest,6,Undistributed offsetting receipts from interest credited to federal trust funds (MTS Table 3).
+2026-05-31 00:00:00,110072.0,81764.3,2,-30928.0,-23670.7,2,-30928.0,560.22,1,emp_retire_off,5,Off-budget employment and general retirement receipts primarily Social Security and Medicare payroll taxes (MTS Table 3 line 50).
+2026-05-31 00:00:00,32021.8,23701.03,1,-11660.98,-8511.31,2,-11660.98,189.74,2,emp_retire_on,5,On-budget employment and general retirement receipts including federal civilian and railroad retirement contributions (MTS Table 3 line 60).
+2026-05-31 00:00:00,110072.0,81764.3,2,-30928.0,-23670.7,2,-30928.0,560.22,1,total_receipts_off,5,Total off-budget federal receipts primarily Social Security payroll taxes (MTS Table 3).
+2026-05-31 00:00:00,22625.79,13803.09,2,5660.61,-219.77,2,5660.61,49.99,1,usda,5,Outlays for the U.S. Department of Agriculture (MTS Table 3).
+2026-05-31 00:00:00,132622.55,55391.59,2,20622.55,-2383.78,2,20622.55,717.9,1,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
 4/30/2026 0:00,13356.38,9545.78,3,2579.79,484.78,3,2579.79,25.16,2,opm,8,Outlays for the Office of Personnel Management primarily federal employee retirement and health benefits (MTS Table 3).
 4/30/2026 0:00,16965.18,14022.86,1,-16176.2,124.07,3,-16176.2,185.21,3,usda,7,Outlays for the U.S. Department of Agriculture (MTS Table 3).
 4/30/2026 0:00,43682.78,32212.34,2,10339.21,7415.1,2,10339.21,105.16,1,emp_retire_on,5,On-budget employment and general retirement receipts including federal civilian and railroad retirement contributions (MTS Table 3 line 60).
