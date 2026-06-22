@@ -12,11 +12,11 @@ import statsmodels.api as sm
 #os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
 BASE_DIR = Path(__file__).parent.parent  # assumes script is in scripts/
 data_path = BASE_DIR / "data/mts_data.csv"
-dict_path = BASE_DIR / "data/MTS Dictionary.csv"
+dict_path = BASE_DIR / "data/MTS dictionary.csv"
 
 # ── Config ────────────────────────────────────────────────────────────────────
 data_path = Path("data/mts_data.csv")
-dict_path = Path("data/MTS Dictionary.csv")
+dict_path = Path("data/MTS dictionary.csv")
 
 #Load output file
 output_data=pd.read_csv("data/output_data.csv")
