@@ -144,7 +144,7 @@ with st.sidebar:
 
     selected_vars = []
     for var in filtered_vars:
-        checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{var}")
+        checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{data_mode}_{var}")
         if checked:
             selected_vars.append(var)
 
