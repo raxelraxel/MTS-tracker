@@ -22,12 +22,16 @@ df = load_mts_data()
 @st.cache_data
 def load_groq_summaries() -> list:
     with open(Path("data/groq_summaries.json"), "r", encoding="utf-8") as f:
-        return json.load(f)
+        records = json.load(f)
+    for r in records:
+        r["record_date"] = pd.to_datetime(r["record_date"]).strftime("%Y-%m-%d")
+    return records
 
 @st.cache_data
 def load_anomaly_flags() -> pd.DataFrame:
-    return pd.read_csv(Path("data/output_anomaly_flags.csv"))
-
+    df = pd.read_csv(Path("data/output_anomaly_flags.csv"))
+    df["record_date"] = pd.to_datetime(df["record_date"], format="mixed").dt.strftime("%Y-%m-%d")
+    return df
 
 summaries = load_groq_summaries()
 anomaly_flags = load_anomaly_flags()
@@ -123,7 +127,7 @@ with st.sidebar:
     if show_anomalies:
         # Use the same date selected in the summary dropdown
         anomaly_vars = anomaly_flags[
-            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
+            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date,format="mixed")
             ]["variable"].tolist()
         filtered_vars = [v for v in filtered_vars if v in anomaly_vars]
         if not filtered_vars:
