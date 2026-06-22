@@ -127,24 +127,15 @@ with st.sidebar:
     # ── Variable checkboxes ───────────────────────────────
     st.subheader("Variables")
 
-    if show_summary:
-        anomaly_vars = anomaly_flags[
-            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
-        ]["variable"].tolist()
-        filtered_vars = anomaly_vars if anomaly_vars else []
-        default_selected = set()
-        if not filtered_vars:
-            st.caption("No anomalies flagged for the selected month.")
-    else:
-        if len(filtered_vars) > 6:
-            all_cols = [c for c in df.columns if c in filtered_vars]
-            filtered_vars = all_cols[:6]
-            st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
-        default_selected = set(filtered_vars)
+    if len(filtered_vars) > 6:
+        all_cols = [c for c in df.columns if c in filtered_vars]
+        filtered_vars = all_cols[:6]
+        st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
+    default_selected = set(filtered_vars)
 
     selected_vars = []
     for var in filtered_vars:
-        checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{data_mode}_{var}")
+        checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{var}")
         if checked:
             selected_vars.append(var)
 
@@ -152,6 +143,17 @@ with st.sidebar:
         all_cols = [c for c in df.columns if c in selected_vars]
         selected_vars = all_cols[:6]
         st.caption("⚠️ Max 6 variables. Showing first 6 checked.")
+
+
+# ── Determine variables to plot ───────────────────────────────────────────────
+if show_summary:
+    anomaly_vars = anomaly_flags[
+        pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
+    ]["variable"].tolist()
+    chart_vars = anomaly_vars if anomaly_vars else selected_vars
+else:
+    chart_vars = selected_vars
+
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Groq narrative summary
@@ -210,14 +212,14 @@ chart_title = (
 )
 st.markdown(f"### {chart_title}")
 
-if not selected_vars:
+if not chart_vars:
     st.warning("No variables selected. Please select at least one variable in the sidebar.")
 
 elif df_filtered.empty:
     st.warning("No data in the selected date range.")
 
 else:
-    n = len(selected_vars)
+    n = len(chart_vars)
 
     # Build subplot grid — 2 columns, enough rows to fit all charts
     n_cols = 2
@@ -226,7 +228,7 @@ else:
     fig = make_subplots(
         rows=n_rows,
         cols=n_cols,
-        subplot_titles=selected_vars,
+        subplot_titles=chart_vars,
         vertical_spacing=0.15,
         horizontal_spacing=0.10,
     )
@@ -238,7 +240,7 @@ else:
     ]
 
     # ── Plot one line per variable in its own facet ───────────────────────────
-    for i, var in enumerate(selected_vars):
+    for i, var in enumerate(chart_vars):
         row = i // n_cols + 1
         col = i % n_cols + 1
 
