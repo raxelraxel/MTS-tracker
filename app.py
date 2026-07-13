@@ -128,6 +128,7 @@ with st.sidebar:
             ]["variable"].tolist()
         if not filtered_vars:
             st.caption("No anomalies flagged for this month.")
+    filtered_vars = list(dict.fromkeys(filtered_vars))
     st.markdown("---")
 
     # ── Variable checkboxes ───────────────────────────────
