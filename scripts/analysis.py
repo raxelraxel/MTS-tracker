@@ -361,3 +361,4 @@ print(summary_text)
 save_groq_summary(record_date, summary_text)
 
 ###To add: PCA steps and save analysis output to a new file called mts_output.csv, appending the row.
+##Update Groq queries to show direction.

@@ -154,8 +154,8 @@ if show_summary:
 else:
     chart_vars = selected_vars
 
-st.write(f"chart_vars: {chart_vars}")
-st.write(f"chart_vars: {anomaly_vars}")
+#st.write(f"chart_vars: {chart_vars}")
+#st.write(f"chart_vars: {anomaly_vars}")
 # ══════════════════════════════════════════════════════════════════════════════
 # Groq narrative summary
 # ══════════════════════════════════════════════════════════════════════════════
@@ -221,7 +221,7 @@ elif df_filtered.empty:
 
 else:
     n = len(chart_vars)
-    st.write(f"n_vars: {n}")
+    #st.write(f"n_vars: {n}")
     # Build subplot grid — 2 columns, enough rows to fit all charts
     n_cols = 2
     n_rows = (n + 1) // 2   # ceiling division: e.g. 5 vars → 3 rows
