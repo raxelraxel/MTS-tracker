@@ -9,11 +9,6 @@ load_dotenv()
 import json
 import statsmodels.api as sm
 
-#os.chdir(r"C:\Users\backu\Dropbox\Data Drivers\2.0\BPC\Projects\Fiscal policy\MTS App\v1.0")
-BASE_DIR = Path(__file__).parent.parent  # assumes script is in scripts/
-data_path = BASE_DIR / "data/mts_data.csv"
-dict_path = BASE_DIR / "data/MTS dictionary.csv"
-
 # ── Config ────────────────────────────────────────────────────────────────────
 data_path = Path("data/mts_data.csv")
 dict_path = Path("data/MTS dictionary.csv")
@@ -292,9 +287,9 @@ output_data = pd.concat([output, output_data])
 output_data = output_data.drop_duplicates(subset=["record_date", "variable"], keep="first")
 output_data.to_csv("data/output_data.csv", index=False)
 
-#Originally Just look at the 3 and 2 flagged anomalies, but now using total score of 5 or higher. 5 could be one anomaly is 3 (high), and two are 1 (low), or two are medium (2) and 1 low (1).
+#Flag variables with a total score of 5 or higher. 5 could be one anomaly is 3 (high), and two are 1 (low), or two are medium (2) and 1 low (1).
 
-#flags = output[(output["anomaly_same_month"].isin([2,3])) | (output["anomaly_yoy_change"].isin([2,3]))  | (output["anomaly_mom_change"].isin([2,3]))]
+#Note: old script flagged any anomaly 2 or 3: flags = output[(output["anomaly_same_month"].isin([2,3])) | (output["anomaly_yoy_change"].isin([2,3]))  | (output["anomaly_mom_change"].isin([2,3]))]
 flags = output[output["total_score"]>=5]
 flags = flags.merge(dict_df[["variable","description"]], on="variable", how="left") #merge in complete descriptions of variables.
 flags=flags.sort_values("total_score", ascending=False) #sort based on total risk score, from high to low.
@@ -339,9 +334,12 @@ Anomaly risk is flagged as 3, 2, and 1, where 3 is the highest risk, 2 is medium
 A variable could have an anomaly flagged for any of the metrics - not necessarily all of them.
 
 Describe the rows with anomalies, saying the risk level (3=high, 2=medium, 1=none), the current value (in millions $), and the 10-year historical average for the flagged metric. 
+Describe whether the current value is higher or lower than the 10-year historical average.
 Use the text from the variable "description" to describe the results. 
 That variable contains a plain-language explanation of each row. 
 Use bullet points no longer than 1 sentence. 
+Do not use the term "significant" in your description - use "meaningful" or "substantive".
+
 
 Output:
 Start your output with this text: "For the month of (record_date), potential anomalies were found for (number of rows) line items. Anomalies were found in the following items:"
@@ -357,7 +355,7 @@ response = client.chat.completions.create(
 )
 
 summary_text = response.choices[0].message.content
-print(summary_text)
+#print(summary_text)
 save_groq_summary(record_date, summary_text)
 
 ###To add: PCA steps and save analysis output to a new file called mts_output.csv, appending the row.

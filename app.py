@@ -17,6 +17,7 @@ def load_dictionary() -> pd.DataFrame:
 
 dict_df = load_dictionary()
 df = load_mts_data()
+var_descriptions = dict_df.set_index("variable")["description"].to_dict()
 
 
 @st.cache_data
@@ -101,19 +102,19 @@ with st.sidebar:
     # ── Filter mode ───────────────────────────────────────
     filter_mode = st.radio(
         "Filter by:",
-        options=["Group", "MTS Table"],
+        options=["Group", "MTS Table","Anomalies"],
         horizontal=True,
     )
 
     if filter_mode == "Group":
-        groups = dict_df["group"].unique().tolist()
+        groups = dict_df.loc[dict_df["group"] != "metadata", "group"].unique().tolist() #Exclude "metadata" from the drop down
         selected_filter = st.selectbox(
             "Select Group",
             options=groups,
             index=groups.index("summary"),
         )
         filtered_vars = dict_df[dict_df["group"] == selected_filter]["variable"].tolist()
-    else:
+    elif filter_mode=="MTS Table":
         tables = sorted(dict_df["mts_table"].unique().tolist(), key=str)
         selected_filter = st.selectbox(
             "Select MTS Table",
@@ -121,7 +122,12 @@ with st.sidebar:
             format_func=lambda x: f"Table {x}",
         )
         filtered_vars = dict_df[dict_df["mts_table"] == selected_filter]["variable"].tolist()
-
+    else: #filter_mode=="Anomalies"
+        filtered_vars = anomaly_flags[
+            pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
+            ]["variable"].tolist()
+        if not filtered_vars:
+            st.caption("No anomalies flagged for this month.")
     st.markdown("---")
 
     # ── Variable checkboxes ───────────────────────────────
@@ -135,7 +141,12 @@ with st.sidebar:
 
     selected_vars = []
     for var in filtered_vars:
-        checked = st.checkbox(var, value=(var in default_selected), key=f"cb_{var}")
+        checked = st.checkbox(
+            var,
+            value=(var in default_selected),
+            key=f"cb_{var}",
+            help=var_descriptions.get(var, "No description available."),
+        )
         if checked:
             selected_vars.append(var)
 
@@ -146,16 +157,8 @@ with st.sidebar:
 
 
 # ── Determine variables to plot ───────────────────────────────────────────────
-if show_summary:
-    anomaly_vars = anomaly_flags[
-        pd.to_datetime(anomaly_flags["record_date"]) == pd.to_datetime(selected_summary_date)
-    ]["variable"].tolist()
-    chart_vars = anomaly_vars if anomaly_vars else selected_vars
-else:
-    chart_vars = selected_vars
+chart_vars = selected_vars
 
-#st.write(f"chart_vars: {chart_vars}")
-#st.write(f"chart_vars: {anomaly_vars}")
 # ══════════════════════════════════════════════════════════════════════════════
 # Groq narrative summary
 # ══════════════════════════════════════════════════════════════════════════════
@@ -221,7 +224,6 @@ elif df_filtered.empty:
 
 else:
     n = len(chart_vars)
-    #st.write(f"n_vars: {n}")
     # Build subplot grid — 2 columns, enough rows to fit all charts
     n_cols = 2
     n_rows = (n + 1) // 2   # ceiling division: e.g. 5 vars → 3 rows
