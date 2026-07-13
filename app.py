@@ -131,13 +131,10 @@ with st.sidebar:
     st.markdown("---")
 
     # ── Variable checkboxes ───────────────────────────────
+    # ── Variable checkboxes ───────────────────────────────
     st.subheader("Variables")
 
-    if len(filtered_vars) > 6:
-        all_cols = [c for c in df.columns if c in filtered_vars]
-        filtered_vars = all_cols[:6]
-        st.caption("⚠️ Max 6 variables shown. First 6 pre-selected.")
-    default_selected = set(filtered_vars)
+    default_selected = set(filtered_vars[:6])  # pre-check only the first 6 by default
 
     selected_vars = []
     for var in filtered_vars:
@@ -154,7 +151,6 @@ with st.sidebar:
         all_cols = [c for c in df.columns if c in selected_vars]
         selected_vars = all_cols[:6]
         st.caption("⚠️ Max 6 variables. Showing first 6 checked.")
-
 
 # ── Determine variables to plot ───────────────────────────────────────────────
 chart_vars = selected_vars

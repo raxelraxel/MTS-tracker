@@ -340,7 +340,6 @@ That variable contains a plain-language explanation of each row.
 Use bullet points no longer than 1 sentence. 
 Do not use the term "significant" in your description - use "meaningful" or "substantive".
 
-
 Output:
 Start your output with this text: "For the month of (record_date), potential anomalies were found for (number of rows) line items. Anomalies were found in the following items:"
 Then present a bulleted list of the results, where each bullet correspond to one row in the data. Order rows from highest to lowest total anomaly score, using variable "total_score".
