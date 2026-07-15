@@ -5,7 +5,7 @@ on:
     # Runs on the 15th of every month at 08:00 UTC
     # MTS data for the prior month typically publishes in the first week,
     # so the 15th gives it plenty of time to be available.
-    - cron: "0 8 15 * *"
+    - cron: "0 8 * * *"
 
   # Allows you to trigger this manually from the Actions tab in GitHub
   workflow_dispatch:
@@ -31,9 +31,11 @@ jobs:
         run: pip install requests pandas statsmodels groq python-dotenv
 
       - name: Fetch latest MTS data
+        id: fetch
         run: python scripts/fetch_mts_data.py
 
       - name: Commit and push updated CSV
+        if: steps.fetch.outputs.new_data == 'true'
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

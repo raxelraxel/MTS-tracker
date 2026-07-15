@@ -4,6 +4,19 @@ fetch_mts_data.py
 Fetches the latest monthly Treasury MTS data (Tables 2, 3, 4, 5) and BEA GDP
 deflator, cleans and combines them into a single row, then appends that row to
 data/mts_data.csv if the month isn't already present.
+
+helper functions include:
+build_urls: creates the URLs for the specific API calls across the tables.
+fetch_json: call url API to return JSON data
+get_val: reformat data to get each line from MTS data
+get_str: get string headers
+to_num: convert to numeric
+date_to_bea_quarter: convert BEA data to quarterly
+fetch_deflator_rows: get the GDP deflator records from BEA
+get_deflator_value: pull the specific GDP deflator for a given record
+fetch_and_clean: call the Treasury API to get the MTS data and format it.
+load_existing: import the existing mts_data.csv file to append new data to.
+get_latest_record_date: identify the latest record of data by first looking at the existing data, and adding a month to that.
 """
 
 import requests
@@ -11,13 +24,13 @@ import pandas as pd
 from datetime import date
 from pathlib import Path
 import sys
+import os
 
 # ── Config ────────────────────────────────────────────────────────────────────
 CSV_PATH = Path("data/mts_data.csv")
 DATE_COL = "record_date"
 
 BEA_USER_ID = "4EF114EC-EABF-4B44-A0C4-C2598C8CBCAF"  # move to env var / secret if desired
-
 
 # ── API URLs ──────────────────────────────────────────────────────────────────
 def build_urls(record_date: str) -> dict:
@@ -74,13 +87,11 @@ BEA_PARAMS = {
 # SeriesCode for the GDP deflator in BEA T10109
 BEA_DEFLATOR_SERIES = "DPCERD"
 
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 def fetch_json(url: str, params: dict = None) -> dict:
     resp = requests.get(url, params=params, timeout=30)
     resp.raise_for_status()
     return resp.json()
-
 
 def get_val(data: list[dict], line_code: str, field: str) -> float | str:
     """Find a row by line_code_nbr and return its numeric field value."""
@@ -95,17 +106,14 @@ def get_val(data: list[dict], line_code: str, field: str) -> float | str:
     except (ValueError, TypeError):
         return ""
 
-
 def get_str(data: list[dict], field: str) -> str:
     """Return a string field from the first row."""
     if not data:
         return ""
     return str(data[0].get(field, ""))
 
-
 def to_num(v: float | str) -> float:
     return 0.0 if v == "" else float(v)
-
 
 def date_to_bea_quarter(record_date: str) -> str:
     """
@@ -115,7 +123,6 @@ def date_to_bea_quarter(record_date: str) -> str:
     dt = pd.to_datetime(record_date)
     quarter = f"Q{dt.quarter}"
     return f"{dt.year}{quarter}"
-
 
 # ── BEA deflator ──────────────────────────────────────────────────────────────
 def fetch_deflator_rows() -> list[dict]:
@@ -129,7 +136,6 @@ def fetch_deflator_rows() -> list[dict]:
     # Filter to the deflator series only
     return [r for r in rows if r.get("SeriesCode") == BEA_DEFLATOR_SERIES]
 
-
 def get_deflator_value(record_date: str, deflator_rows: list[dict]) -> float | str:
     """Exact quarter match, falling back to the most recent available quarter."""
     if not record_date or not deflator_rows:
@@ -142,7 +148,6 @@ def get_deflator_value(record_date: str, deflator_rows: list[dict]) -> float | s
     # Fallback: most recent quarter
     sorted_rows = sorted(deflator_rows, key=lambda r: r.get("TimePeriod", ""))
     return float(sorted_rows[-1]["DataValue"].replace(",", ""))
-
 
 # ── Main fetch & clean ─────────────────────────────────────────────────────────
 def fetch_and_clean(record_date: str) -> pd.DataFrame:
@@ -333,6 +338,20 @@ def fetch_and_clean(record_date: str) -> pd.DataFrame:
 
     return pd.DataFrame([row])
 
+# ── GitHub Action Signaling ─────────────────────────────────────────────────────────
+def set_github_output(name: str, value: str) -> None:
+    """
+    Write a key=value pair to the GITHUB_OUTPUT file so later steps in the same
+    job can branch on it via `if: steps.<id>.outputs.<name> == '...'`.
+    No-ops safely when run outside GitHub Actions (e.g. local testing).
+    """
+    output_file = os.environ.get("GITHUB_OUTPUT")
+    if not output_file:
+        print(f"  (local run: GITHUB_OUTPUT not set; would emit {name}={value})")
+        return
+    with open(output_file, "a") as f:
+        f.write(f"{name}={value}\n")
+
 
 # ── CSV helpers ───────────────────────────────────────────────────────────────
 def load_existing() -> pd.DataFrame:
@@ -343,7 +362,6 @@ def load_existing() -> pd.DataFrame:
         return df
     print(f"  → No existing CSV at {CSV_PATH}; will create a new one.")
     return pd.DataFrame()
-
 
 def get_latest_record_date(existing: pd.DataFrame) -> str:
     """
@@ -395,11 +413,13 @@ def main():
 
     if new_row.empty:
         print("No data returned. Exiting.")
+        set_github_output("new_data","false") #This sends a message to GitHub actions to stop the YAML from calling all the scripts.
         sys.exit(0)
 
     combined, appended = append_new_row(existing, new_row)
 
     if not appended:
+        set_github_output("new_data","false") #This sends a message to GitHub actions to stop the YAML from calling all the scripts.
         sys.exit(0)
 
     # Sort descending by date before saving
@@ -418,7 +438,7 @@ def main():
     combined.to_csv(CSV_PATH, index=False)
     print(f"\n✓ Appended 1 new row for {record_date}. CSV now has {len(combined)} total rows.")
     print(f"  Saved to {CSV_PATH}")
-
+    set_github_output("new_data", "true") #New record exists, so sends message to GitHub Action to keep running the YAML to call scripts
 
 if __name__ == "__main__":
     main()

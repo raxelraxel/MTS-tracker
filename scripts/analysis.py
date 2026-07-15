@@ -275,7 +275,7 @@ def save_groq_summary(record_date, summary_text):
         json.dump(records, f, indent=2)
 
 
-###########Run the analysis code code
+###########Run the analysis code
 
 #Identify latest record date from the updated data.
 current_date = df_raw.index.max()
