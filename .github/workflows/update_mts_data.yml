@@ -2,9 +2,7 @@ name: Update MTS Data
 
 on:
   schedule:
-    # Runs on the 15th of every month at 08:00 UTC
-    # MTS data for the prior month typically publishes in the first week,
-    # so the 15th gives it plenty of time to be available.
+    # Runs every day to check if new data are available. If none, it skips.
     - cron: "0 8 * * *"
 
   # Allows you to trigger this manually from the Actions tab in GitHub
@@ -50,6 +48,8 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       - name: Commit and push analysis output    # ← only needed if analysis.py saves files
         run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/        # or whatever folder analysis.py writes to
           git diff --cached --quiet || git commit -m "chore: update analysis output [$(date +'%Y-%m-%d')]"
           git push
