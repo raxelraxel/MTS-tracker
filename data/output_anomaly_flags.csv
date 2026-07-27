@@ -8,6 +8,15 @@ record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current
 2026-06-30 00:00:00,-36911.39,39562.36,2,-42747.77,31743.89,2,-42747.77,1.61,1,ed,5,Outlays for the U.S. Department of Education (MTS Table 3).
 2026-06-30 00:00:00,185199.79,105729.36,3,52577.23,50337.76,1,52577.23,881.05,1,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
 2026-06-30 00:00:00,-866.74,2299.75,2,-5464.49,-963.43,2,-5464.49,8.58,1,intl,5,Outlays for international assistance and foreign affairs programs (MTS Table 3).
+2026-06-30 00:00:00,-25555.67,7419.19,3,-25513.36,930.95,3,-25513.36,-23.9,3,customs,9,Customs duties and fees collected on imports (MTS Table 3).
+2026-06-30 00:00:00,-2384.91,1755.88,3,-4095.74,576.56,3,-4095.74,2.84,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
+2026-06-30 00:00:00,-702.1,7063.64,2,-7177.17,1544.7,3,-7177.17,29.05,3,outlays_ptc,8,Outlays for the Premium Tax Credit which subsidizes health insurance purchased through ACA marketplaces (MTS Table 5).
+2026-06-30 00:00:00,68200.99,41920.94,2,5528.94,-1424.02,3,5528.94,246.91,1,outlays_medicaid,6,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
+2026-06-30 00:00:00,545.24,8566.48,2,-9785.67,-388.64,3,-9785.67,-56.03,1,outlays_refundable_credits,6,Total outlays for all refundable tax credits derived by summing outlays_ptc and outlays_eitc and outlays_ctc (MTS Table 5).
+2026-06-30 00:00:00,283146.83,171611.59,2,131168.29,34186.08,2,131168.29,613.4,1,individual_income_tax,5,Federal individual income tax receipts reported as residual of combined tax payments minus estimated Social Security and Medicare taxes (MTS Table 3).
+2026-06-30 00:00:00,-36911.39,39562.36,2,-42747.77,31743.89,2,-42747.77,1.61,1,ed,5,Outlays for the U.S. Department of Education (MTS Table 3).
+2026-06-30 00:00:00,185199.79,105729.36,3,52577.23,50337.76,1,52577.23,881.05,1,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
+2026-06-30 00:00:00,-866.74,2299.75,2,-5464.49,-963.43,2,-5464.49,8.58,1,intl,5,Outlays for international assistance and foreign affairs programs (MTS Table 3).
 5/31/2026 0:00,-42.3,6488.24,1,-22166.44,163.56,3,-22166.44,159.1,3,customs,7,Customs duties and fees collected on imports (MTS Table 3).
 5/31/2026 0:00,960.42,707.47,2,324.49,23.94,2,324.49,-0.07,2,jud,6,Outlays for the judicial branch of the federal government (MTS Table 3).
 5/31/2026 0:00,-18922.02,-5888.62,2,-5992.68,2197.43,3,-5992.68,-100.05,1,undistributed_offsets_interest,6,Undistributed offsetting receipts from interest credited to federal trust funds (MTS Table 3).
