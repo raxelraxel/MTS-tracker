@@ -1,4 +1,38 @@
 record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current,yoy_change_avg,anomaly_yoy_change,mom_change_current,mom_change_avg,anomaly_mom_change,variable,total_score,description
+2026-07-31 00:00:00,5712.22,1266.07,3,8097.13,-489.81,3,8097.13,-30.48,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
+2026-07-31 00:00:00,-8546.44,7964.51,2,17009.23,545.32,3,17009.23,-231.13,3,customs,8,Customs duties and fees collected on imports (MTS Table 3).
+2026-07-31 00:00:00,14362.3,8915.7,3,3626.54,-370.14,3,3626.54,37.68,1,dot,7,Outlays for the U.S. Department of Transportation (MTS Table 3).
+2026-07-31 00:00:00,-13785.68,-7893.95,3,-4584.76,56.59,3,-4584.76,-24.52,1,undistributed_offsets_other,7,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
+2026-07-31 00:00:00,12467.0,4996.1,2,14749.56,-204.75,2,14749.56,-61.51,2,civil_defense,6,Outlays for civil defense programs (MTS Table 3).
+2026-07-31 00:00:00,3851.79,1721.63,3,1647.91,-16.65,1,1647.91,4.9,1,estate_gift,5,Federal estate and gift tax receipts (MTS Table 3).
+2026-07-31 00:00:00,21.62,41.07,2,321.43,53.57,1,321.43,-2.71,2,eop,5,Outlays for the Executive Office of the President (MTS Table 3).
+2026-07-31 00:00:00,129971.17,45016.33,3,53214.17,1385.4,1,53214.17,357.34,1,outlays_supp_med_trust,5,Outlays from the Medicare Supplementary Medical Insurance Trust Fund covering Medicare Parts B and D (MTS Table 5).
+2026-07-31 00:00:00,62163.69,29626.45,3,16032.57,-1879.43,1,16032.57,158.48,1,outlays_hosp_insurance_trust,5,Outlays from the Medicare Hospital Insurance Trust Fund covering Medicare Part A (MTS Table 5).
+2026-07-31 00:00:00,58297.6,43269.77,1,-9903.39,1348.83,2,-9903.39,289.86,2,outlays_medicaid,5,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
+2026-07-31 00:00:00,55163.52,19651.52,3,20510.89,183.29,1,20510.89,166.05,1,va,5,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
+2026-07-31 00:00:00,1465.77,735.34,3,-93.4,-193.26,1,-93.4,7.59,1,epa,5,Outlays for the U.S. Environmental Protection Agency (MTS Table 3).
+2026-07-31 00:00:00,117573.58,54343.21,2,-67626.21,-51386.15,1,-67626.21,1301.34,2,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
+2026-07-31 00:00:00,12244.24,5514.42,3,1172.16,-806.88,1,1172.16,61.19,1,dhs,5,Outlays for the U.S. Department of Homeland Security (MTS Table 3).
+2026-07-31 00:00:00,4781.0,2414.51,2,411.46,-288.09,2,411.46,15.32,1,doe,5,Outlays for the U.S. Department of Energy (MTS Table 3).
+2026-07-31 00:00:00,1001.41,701.83,3,199.29,4.89,1,199.29,1.28,1,jud,5,Outlays for the judicial branch of the federal government (MTS Table 3).
+2026-07-31 00:00:00,4939.65,1861.84,3,834.44,-805.58,1,834.44,26.8,1,outlays_fema,5,Outlays for the Federal Emergency Management Agency disaster relief programs (MTS Table 5).
+2026-07-31 00:00:00,5712.22,1266.07,3,8097.13,-489.81,3,8097.13,-30.48,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
+2026-07-31 00:00:00,-8546.44,7964.51,2,17009.23,545.32,3,17009.23,-231.13,3,customs,8,Customs duties and fees collected on imports (MTS Table 3).
+2026-07-31 00:00:00,14362.3,8915.7,3,3626.54,-370.14,3,3626.54,37.68,1,dot,7,Outlays for the U.S. Department of Transportation (MTS Table 3).
+2026-07-31 00:00:00,-13785.68,-7893.95,3,-4584.76,56.59,3,-4584.76,-24.52,1,undistributed_offsets_other,7,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
+2026-07-31 00:00:00,12467.0,4996.1,2,14749.56,-204.75,2,14749.56,-61.51,2,civil_defense,6,Outlays for civil defense programs (MTS Table 3).
+2026-07-31 00:00:00,3851.79,1721.63,3,1647.91,-16.65,1,1647.91,4.9,1,estate_gift,5,Federal estate and gift tax receipts (MTS Table 3).
+2026-07-31 00:00:00,21.62,41.07,2,321.43,53.57,1,321.43,-2.71,2,eop,5,Outlays for the Executive Office of the President (MTS Table 3).
+2026-07-31 00:00:00,129971.17,45016.33,3,53214.17,1385.4,1,53214.17,357.34,1,outlays_supp_med_trust,5,Outlays from the Medicare Supplementary Medical Insurance Trust Fund covering Medicare Parts B and D (MTS Table 5).
+2026-07-31 00:00:00,62163.69,29626.45,3,16032.57,-1879.43,1,16032.57,158.48,1,outlays_hosp_insurance_trust,5,Outlays from the Medicare Hospital Insurance Trust Fund covering Medicare Part A (MTS Table 5).
+2026-07-31 00:00:00,58297.6,43269.77,1,-9903.39,1348.83,2,-9903.39,289.86,2,outlays_medicaid,5,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
+2026-07-31 00:00:00,55163.52,19651.52,3,20510.89,183.29,1,20510.89,166.05,1,va,5,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
+2026-07-31 00:00:00,1465.77,735.34,3,-93.4,-193.26,1,-93.4,7.59,1,epa,5,Outlays for the U.S. Environmental Protection Agency (MTS Table 3).
+2026-07-31 00:00:00,117573.58,54343.21,2,-67626.21,-51386.15,1,-67626.21,1301.34,2,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
+2026-07-31 00:00:00,12244.24,5514.42,3,1172.16,-806.88,1,1172.16,61.19,1,dhs,5,Outlays for the U.S. Department of Homeland Security (MTS Table 3).
+2026-07-31 00:00:00,4781.0,2414.51,2,411.46,-288.09,2,411.46,15.32,1,doe,5,Outlays for the U.S. Department of Energy (MTS Table 3).
+2026-07-31 00:00:00,1001.41,701.83,3,199.29,4.89,1,199.29,1.28,1,jud,5,Outlays for the judicial branch of the federal government (MTS Table 3).
+2026-07-31 00:00:00,4939.65,1861.84,3,834.44,-805.58,1,834.44,26.8,1,outlays_fema,5,Outlays for the Federal Emergency Management Agency disaster relief programs (MTS Table 5).
 2026-06-30 00:00:00,-25555.67,7419.19,3,-25513.36,930.95,3,-25513.36,-23.9,3,customs,9,Customs duties and fees collected on imports (MTS Table 3).
 2026-06-30 00:00:00,-2384.91,1755.88,3,-4095.74,576.56,3,-4095.74,2.84,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
 2026-06-30 00:00:00,-702.1,7063.64,2,-7177.17,1544.7,3,-7177.17,29.05,3,outlays_ptc,8,Outlays for the Premium Tax Credit which subsidizes health insurance purchased through ACA marketplaces (MTS Table 5).
