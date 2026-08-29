@@ -362,6 +362,19 @@ else:
 
     st.plotly_chart(fig, width="stretch")
 
+    # ── Download data ───────────────────────────────────────────────────────────
+    st.markdown("#### Download Data")
+    export_df = df_filtered[["record_date"] + chart_vars]
+    csv_bytes = export_df.to_csv(index=False).encode("utf-8")
+
+    st.download_button(
+        label="⬇ Download all shown data (CSV)",
+        data=csv_bytes,
+        file_name=f"mts_data_{data_mode.replace(' ', '_')}_{start_date}_{end_date}.csv",
+        mime="text/csv",
+        key=f"download_all_{data_mode}",
+    )
+
     # ── Footer note ───────────────────────────────────────────────────────────
     if is_standardized:
         st.caption("Values shown as z-scores (mean=0, sd=1). Each variable standardized independently across the full dataset.")

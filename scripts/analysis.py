@@ -330,10 +330,10 @@ All values are in US dollars. The table includes variables that presented an ano
 2) Current month year-over-year values vs the 10-year average. E.g April 2026-April 2025, vs average of April_t-April_t-1 for 2016-2026.
 3) Current month, month-over-month values vs the 10-year average. E.g. April 2026-March 2026, vs average of April-March for 2016-2026.
 
-Anomaly risk is flagged as 3, 2, and 1, where 3 is the highest risk, 2 is medium risk, and 1 is no risk. 
+Anomaly likelihood is flagged as 3, 2, and 1, where 3 is the highest likelihood, 2 is medium likelihood, and 1 is no likelihood. 
 A variable could have an anomaly flagged for any of the metrics - not necessarily all of them.
 
-Describe the rows with anomalies, saying the risk level (3=high, 2=medium, 1=none), the current value (in millions $), and the 10-year historical average for the flagged metric. 
+Describe the rows with anomalies, saying the likelihood level (3=high, 2=medium, 1=none), the current value (in millions $), and the 10-year historical average for the flagged metric. 
 Describe whether the current value is higher or lower than the 10-year historical average.
 Use the text from the variable "description" to describe the results. 
 That variable contains a plain-language explanation of each row. 
@@ -341,7 +341,7 @@ Use bullet points no longer than 1 sentence.
 Do not use the term "significant" in your description - use "meaningful" or "substantive".
 
 Output:
-Start your output with this text: "For the month of (record_date), potential anomalies were found for (number of rows) line items. Anomalies were found in the following items:"
+Start your output with this exact text: "For the month of (record_date), potential anomalies were found for (number of rows) line items. Anomalies were found in the following items:"
 Then present a bulleted list of the results, where each bullet correspond to one row in the data. Order rows from highest to lowest total anomaly score, using variable "total_score".
 
 {table_str}
