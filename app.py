@@ -4,6 +4,51 @@ from plotly.subplots import make_subplots
 import json
 import pandas as pd
 from pathlib import Path
+import numpy as np
+
+
+#Format changes to change "g" in Plotly to "b"; Plotly uses d3 which automatically does G for billions.
+#These helper formatting functions fix that. Sorry its long.
+def format_currency_bt(value: float) -> str:
+    """Format a dollar value using B/T/M/K suffixes instead of d3's G/M/k."""
+    abs_val = abs(value)
+    sign = "-" if value < 0 else ""
+    if abs_val >= 1e12:
+        return f"{sign}${abs_val / 1e12:.2f}T"
+    elif abs_val >= 1e9:
+        return f"{sign}${abs_val / 1e9:.2f}B"
+    elif abs_val >= 1e6:
+        return f"{sign}${abs_val / 1e6:.2f}M"
+    elif abs_val >= 1e3:
+        return f"{sign}${abs_val / 1e3:.1f}K"
+    else:
+        return f"{sign}${abs_val:.2f}"
+
+def _nice_step(raw_step: float) -> float:
+    """Round a raw tick step up to a 'nice' 1/2/5 x 10^n value."""
+    if raw_step <= 0:
+        return 1
+    exponent = np.floor(np.log10(raw_step))
+    fraction = raw_step / 10**exponent
+    nice_fraction = 1 if fraction <= 1 else 2 if fraction <= 2 else 5 if fraction <= 5 else 10
+    return nice_fraction * 10**exponent
+
+def build_nice_ticks(vmin: float, vmax: float, n_ticks: int = 5):
+    """Return (tickvals, ticktext) as round numbers spanning [vmin, vmax]."""
+    if vmin == vmax:
+        vmin -= 1
+        vmax += 1
+    step = _nice_step((vmax - vmin) / max(n_ticks - 1, 1))
+    start = np.floor(vmin / step) * step
+    ticks = []
+    t = start
+    for _ in range(n_ticks + 4):
+        ticks.append(t)
+        if t > vmax:
+            break
+        t += step
+    return ticks, [format_currency_bt(t) for t in ticks]
+
 
 @st.cache_data(ttl=3600)  # cache for 1 hour so repeated interactions are fast
 def load_mts_data() -> pd.DataFrame:
@@ -244,19 +289,28 @@ else:
         row = i // n_cols + 1
         col = i % n_cols + 1
 
+        y_values = df_filtered[var]
+        if is_standardized:
+            hover_customdata = None
+            hover_val_part = f"{var}: %{{y:.2f}}σ"
+        else:
+            hover_customdata = [format_currency_bt(v) for v in y_values]
+            hover_val_part = f"{var}: %{{customdata}}"
+
         fig.add_trace(
             go.Scatter(
                 x=df_filtered["record_date"],
-                y=df_filtered[var],
+                y=y_values,
                 mode="lines+markers",
                 name=var,
                 line=dict(width=2, color=colors[i % len(colors)]),
                 marker=dict(size=4, color=colors[i % len(colors)]),
                 showlegend=False,
+                customdata=hover_customdata,
                 hovertemplate=(
-                    "<b>%{x|%b %Y}</b><br>"
-                    + (f"{var}: %{{y:$.3s}}" if not is_standardized else f"{var}: %{{y:.2f}}σ")
-                    + "<extra></extra>"
+                        "<b>%{x|%b %Y}</b><br>"
+                        + hover_val_part
+                        + "<extra></extra>"
                 ),
             ),
             row=row,
@@ -264,17 +318,19 @@ else:
         )
 
     # ── Y-axis formatting: dollars for raw, z-score for standardized ──────────
-    for i in range(1, n + 1):
-        axis_key = f"yaxis{i if i > 1 else ''}"
+    for i, var in enumerate(chart_vars):
+        axis_key = f"yaxis{i + 1 if i > 0 else ''}"
         if is_standardized:
-            # Plain decimal for z-scores, with σ suffix
             fig.update_layout(**{
-                axis_key: dict(tickformat=".1f", ticksuffix="σ", zeroline=True, zerolinecolor="#cccccc", zerolinewidth=1)
+                axis_key: dict(tickformat=".1f", ticksuffix="σ", zeroline=True,
+                               zerolinecolor="#cccccc", zerolinewidth=1)
             })
         else:
-            # Dollar billions/trillions
+            vmin = df_filtered[var].min()
+            vmax = df_filtered[var].max()
+            tickvals, ticktext = build_nice_ticks(vmin, vmax)
             fig.update_layout(**{
-                axis_key: dict(tickformat="$.3s")
+                axis_key: dict(tickmode="array", tickvals=tickvals, ticktext=ticktext)
             })
 
     # ── Subplot title font ────────────────────────────────────────────────────
