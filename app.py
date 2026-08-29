@@ -365,7 +365,7 @@ else:
     # ── Download data ───────────────────────────────────────────────────────────
     st.markdown("#### Download Data")
 
-    always_include = ["current_monthly_deficit"]
+    always_include = ["current_month_deficit"]
     export_cols = ["record_date"] + chart_vars + [
         c for c in always_include if c not in chart_vars
     ]
