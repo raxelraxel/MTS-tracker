@@ -364,7 +364,12 @@ else:
 
     # ── Download data ───────────────────────────────────────────────────────────
     st.markdown("#### Download Data")
-    export_df = df_filtered[["record_date"] + chart_vars]
+
+    always_include = ["current_monthly_deficit"]
+    export_cols = ["record_date"] + chart_vars + [
+        c for c in always_include if c not in chart_vars
+    ]
+    export_df = df_filtered[export_cols]
     csv_bytes = export_df.to_csv(index=False).encode("utf-8")
 
     st.download_button(
