@@ -348,7 +348,7 @@ Then present a bulleted list of the results, where each bullet correspond to one
 """
 
 response = client.chat.completions.create(
-    model="llama-3.3-70b-versatile",  # good free-tier model
+    model="openai/gpt-oss-120b",  # good free-tier model
     messages=[{"role": "user", "content": prompt}],
     temperature=0.2,  # low temperature for factual/analytical output
 )
