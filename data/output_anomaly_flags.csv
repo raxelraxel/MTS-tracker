@@ -1,21 +1,13 @@
 record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current,yoy_change_avg,anomaly_yoy_change,mom_change_current,mom_change_avg,anomaly_mom_change,variable,total_score,description
-2026-07-31 00:00:00,5712.22,1266.07,3,8097.13,-489.81,3,8097.13,-30.48,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
-2026-07-31 00:00:00,-8546.44,7964.51,2,17009.23,545.32,3,17009.23,-231.13,3,customs,8,Customs duties and fees collected on imports (MTS Table 3).
-2026-07-31 00:00:00,14362.3,8915.7,3,3626.54,-370.14,3,3626.54,37.68,1,dot,7,Outlays for the U.S. Department of Transportation (MTS Table 3).
-2026-07-31 00:00:00,-13785.68,-7893.95,3,-4584.76,56.59,3,-4584.76,-24.52,1,undistributed_offsets_other,7,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
-2026-07-31 00:00:00,12467.0,4996.1,2,14749.56,-204.75,2,14749.56,-61.51,2,civil_defense,6,Outlays for civil defense programs (MTS Table 3).
-2026-07-31 00:00:00,3851.79,1721.63,3,1647.91,-16.65,1,1647.91,4.9,1,estate_gift,5,Federal estate and gift tax receipts (MTS Table 3).
-2026-07-31 00:00:00,21.62,41.07,2,321.43,53.57,1,321.43,-2.71,2,eop,5,Outlays for the Executive Office of the President (MTS Table 3).
-2026-07-31 00:00:00,129971.17,45016.33,3,53214.17,1385.4,1,53214.17,357.34,1,outlays_supp_med_trust,5,Outlays from the Medicare Supplementary Medical Insurance Trust Fund covering Medicare Parts B and D (MTS Table 5).
-2026-07-31 00:00:00,62163.69,29626.45,3,16032.57,-1879.43,1,16032.57,158.48,1,outlays_hosp_insurance_trust,5,Outlays from the Medicare Hospital Insurance Trust Fund covering Medicare Part A (MTS Table 5).
-2026-07-31 00:00:00,58297.6,43269.77,1,-9903.39,1348.83,2,-9903.39,289.86,2,outlays_medicaid,5,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
-2026-07-31 00:00:00,55163.52,19651.52,3,20510.89,183.29,1,20510.89,166.05,1,va,5,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
-2026-07-31 00:00:00,1465.77,735.34,3,-93.4,-193.26,1,-93.4,7.59,1,epa,5,Outlays for the U.S. Environmental Protection Agency (MTS Table 3).
-2026-07-31 00:00:00,117573.58,54343.21,2,-67626.21,-51386.15,1,-67626.21,1301.34,2,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
-2026-07-31 00:00:00,12244.24,5514.42,3,1172.16,-806.88,1,1172.16,61.19,1,dhs,5,Outlays for the U.S. Department of Homeland Security (MTS Table 3).
-2026-07-31 00:00:00,4781.0,2414.51,2,411.46,-288.09,2,411.46,15.32,1,doe,5,Outlays for the U.S. Department of Energy (MTS Table 3).
-2026-07-31 00:00:00,1001.41,701.83,3,199.29,4.89,1,199.29,1.28,1,jud,5,Outlays for the judicial branch of the federal government (MTS Table 3).
-2026-07-31 00:00:00,4939.65,1861.84,3,834.44,-805.58,1,834.44,26.8,1,outlays_fema,5,Outlays for the Federal Emergency Management Agency disaster relief programs (MTS Table 5).
+2026-08-31 00:00:00,-845.85,1181.72,3,-6558.08,-84.35,3,-6558.08,35.06,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
+2026-08-31 00:00:00,12835.53,8165.2,1,21381.97,200.69,3,21381.97,-92.09,3,customs,7,Customs duties and fees collected on imports (MTS Table 3).
+2026-08-31 00:00:00,15348.1,13434.15,1,12173.61,6603.58,2,12173.61,-68.12,3,misc,6,Miscellaneous federal receipts not classified elsewhere (MTS Table 3).
+2026-08-31 00:00:00,764.9,706.99,1,-236.51,5.15,3,-236.51,2.88,2,jud,6,Outlays for the judicial branch of the federal government (MTS Table 3).
+2026-08-31 00:00:00,97490.09,133202.19,1,-153096.25,9909.09,3,-153096.25,1244.26,2,hhs,6,Outlays for the U.S. Department of Health and Human Services (MTS Table 3).
+2026-08-31 00:00:00,72.63,41.2,2,51.0,0.13,3,51.0,-0.09,1,eop,6,Outlays for the Executive Office of the President (MTS Table 3).
+2026-08-31 00:00:00,22379.09,51804.38,1,-107592.08,6788.05,3,-107592.08,783.6,2,outlays_supp_med_trust,6,Outlays from the Medicare Supplementary Medical Insurance Trust Fund covering Medicare Parts B and D (MTS Table 5).
+2026-08-31 00:00:00,97768.57,61947.15,1,-19805.01,7603.94,3,-19805.01,745.48,1,debt_interest_gross,5,Gross interest payments on the federal public debt (MTS Table 3).
+2026-08-31 00:00:00,-5525.34,-8917.8,1,8260.34,-1023.86,3,8260.34,-61.29,1,undistributed_offsets_other,5,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
 2026-07-31 00:00:00,5712.22,1266.07,3,8097.13,-489.81,3,8097.13,-30.48,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
 2026-07-31 00:00:00,-8546.44,7964.51,2,17009.23,545.32,3,17009.23,-231.13,3,customs,8,Customs duties and fees collected on imports (MTS Table 3).
 2026-07-31 00:00:00,14362.3,8915.7,3,3626.54,-370.14,3,3626.54,37.68,1,dot,7,Outlays for the U.S. Department of Transportation (MTS Table 3).
