@@ -5,6 +5,12 @@ record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current
 2026-09-30 00:00:00,5910.4,8400.3,1,-6925.13,235.1,3,-6925.13,79.7,1,customs,5,Customs duties and fees collected on imports (MTS Table 3).
 2026-09-30 00:00:00,6576.41,2668.13,2,1702.98,-1778.63,2,1702.98,10.37,1,hud,5,Outlays for the U.S. Department of Housing and Urban Development (MTS Table 3).
 2026-09-30 00:00:00,-604.87,7628.21,2,-142.47,1520.44,2,-142.47,-27.15,1,outlays_ptc,5,Outlays for the Premium Tax Credit which subsidizes health insurance purchased through ACA marketplaces (MTS Table 5).
+2026-09-30 00:00:00,2734.63,1715.92,1,3580.49,534.2,3,3580.49,-17.68,3,doi,7,Outlays for the U.S. Department of the Interior (MTS Table 3).
+2026-09-30 00:00:00,-67.28,32.26,3,-139.91,-8.94,3,-139.91,0.32,1,eop,7,Outlays for the Executive Office of the President (MTS Table 3).
+2026-09-30 00:00:00,67981.91,43600.49,2,11195.08,921.54,3,11195.08,193.91,2,outlays_medicaid,7,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
+2026-09-30 00:00:00,5910.4,8400.3,1,-6925.13,235.1,3,-6925.13,79.7,1,customs,5,Customs duties and fees collected on imports (MTS Table 3).
+2026-09-30 00:00:00,6576.41,2668.13,2,1702.98,-1778.63,2,1702.98,10.37,1,hud,5,Outlays for the U.S. Department of Housing and Urban Development (MTS Table 3).
+2026-09-30 00:00:00,-604.87,7628.21,2,-142.47,1520.44,2,-142.47,-27.15,1,outlays_ptc,5,Outlays for the Premium Tax Credit which subsidizes health insurance purchased through ACA marketplaces (MTS Table 5).
 2026-08-31 00:00:00,-845.85,1181.72,3,-6558.08,-84.35,3,-6558.08,35.06,3,doi,9,Outlays for the U.S. Department of the Interior (MTS Table 3).
 2026-08-31 00:00:00,12835.53,8165.2,1,21381.97,200.69,3,21381.97,-92.09,3,customs,7,Customs duties and fees collected on imports (MTS Table 3).
 2026-08-31 00:00:00,15348.1,13434.15,1,12173.61,6603.58,2,12173.61,-68.12,3,misc,6,Miscellaneous federal receipts not classified elsewhere (MTS Table 3).
