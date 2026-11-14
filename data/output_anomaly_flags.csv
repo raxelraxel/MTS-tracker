@@ -7,6 +7,14 @@ record_date,val_current,val_same_month_avg,anomaly_same_month,yoy_change_current
 2026-10-31 00:00:00,31143.3,22871.55,1,16766.21,10546.3,1,16766.21,27.47,3,usda,5,Outlays for the U.S. Department of Agriculture (MTS Table 3).
 2026-10-31 00:00:00,54341.59,20737.96,2,33826.22,-715.24,1,33826.22,49.9,2,va,5,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
 2026-10-31 00:00:00,1343.15,809.35,1,1459.0,488.79,1,1459.0,-5.77,3,corps_engineers,5,Outlays for the U.S. Army Corps of Engineers (MTS Table 3).
+2026-10-31 00:00:00,123991.28,73141.64,3,39770.31,8962.88,2,39770.31,263.35,3,dod_mil,8,Outlays for the Department of Defense military programs (MTS Table 3).
+2026-10-31 00:00:00,19217.23,8725.91,1,13306.83,325.62,3,13306.83,24.1,3,customs,7,Customs duties and fees collected on imports (MTS Table 3).
+2026-10-31 00:00:00,-55196.92,-30063.4,2,-45892.79,-18759.52,2,-45892.79,-24.75,3,undistributed_offsets_other,7,Other undistributed offsetting receipts that reduce gross outlays (MTS Table 3).
+2026-10-31 00:00:00,62.33,36.8,2,129.61,4.54,3,129.61,-0.8,1,eop,6,Outlays for the Executive Office of the President (MTS Table 3).
+2026-10-31 00:00:00,2271.54,1311.26,3,68.15,-393.98,2,68.15,6.17,1,outlays_chip,6,Outlays for the Children's Health Insurance Program (MTS Table 5).
+2026-10-31 00:00:00,31143.3,22871.55,1,16766.21,10546.3,1,16766.21,27.47,3,usda,5,Outlays for the U.S. Department of Agriculture (MTS Table 3).
+2026-10-31 00:00:00,54341.59,20737.96,2,33826.22,-715.24,1,33826.22,49.9,2,va,5,Outlays for the U.S. Department of Veterans Affairs (MTS Table 3).
+2026-10-31 00:00:00,1343.15,809.35,1,1459.0,488.79,1,1459.0,-5.77,3,corps_engineers,5,Outlays for the U.S. Army Corps of Engineers (MTS Table 3).
 2026-09-30 00:00:00,2734.63,1715.92,1,3580.49,534.2,3,3580.49,-17.68,3,doi,7,Outlays for the U.S. Department of the Interior (MTS Table 3).
 2026-09-30 00:00:00,-67.28,32.26,3,-139.91,-8.94,3,-139.91,0.32,1,eop,7,Outlays for the Executive Office of the President (MTS Table 3).
 2026-09-30 00:00:00,67981.91,43600.49,2,11195.08,921.54,3,11195.08,193.91,2,outlays_medicaid,7,Outlays for Medicaid the federal-state health insurance program for low-income individuals (MTS Table 5).
